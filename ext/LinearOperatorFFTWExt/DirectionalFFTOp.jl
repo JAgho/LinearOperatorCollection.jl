@@ -78,6 +78,6 @@ function dir_fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVec
 end
 
 
-function Base.copy(S::FFTOpImpl)
-  return FFTOp(eltype(S); shape=size(S.plan), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
+function Base.copy(S::DirFFTOpImpl)
+  return DirFFTOp(eltype(S); shape=size(S.plan), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
 end
