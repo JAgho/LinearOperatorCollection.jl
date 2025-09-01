@@ -38,7 +38,7 @@ returns an operator which performs an FFT on Arrays of type T
 * (`S = Vector{T}`) - type of temporary vector, change to use on GPU
 * (`kwargs...`) - keyword arguments given to fft plan
 """
-function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims::NTuple{D,Int64}=ntuple(i->i, Val(D)), shift::Bool=true, unitary::Bool=true, S = Array{Complex{real(T)}}, kwargs...) where D
+function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims=ntuple(i->i, Val(D)), shift::Bool=true, unitary::Bool=true, S = Array{Complex{real(T)}}, kwargs...) where D
   
   tmpVec = similar(S(undef, 0), shape...)
   plan = plan_fft!(tmpVec, dims; kwargs...)
