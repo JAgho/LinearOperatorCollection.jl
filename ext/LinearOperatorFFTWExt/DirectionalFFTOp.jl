@@ -54,9 +54,9 @@ function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims
 
   let shape_ = shape, plan_ = plan, iplan_ = iplan, tmpVec_ = tmpVec, facF_ = facF, facB_ = facB, dim_ = dims
 
-    fun! = fft_multiply!
+    fun! = dir_fft_multiply!
     if shift
-      fun! = fft_multiply_shift!
+      fun! = dir_fft_multiply_shift!
     end
 
     return DirFFTOpImpl(prod(shape), prod(shape), false, false, (res, x) -> fun!(res, plan_, x, shape_, dim_, facF_, tmpVec_),
@@ -65,12 +65,12 @@ function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims
   end
 end
 
-function fft_multiply!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, ::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
+function dir_fft_multiply!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, ::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
   plan * copyto!(tmpVec, x)
   res .= factor .* vec(tmpVec)
 end
 
-function fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, dim::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
+function dir_fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, dim::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
   ifftshift!(tmpVec, reshape(x,shape), dim)
   plan * tmpVec
   fftshift!(reshape(res,shape), tmpVec, dim)
