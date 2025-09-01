@@ -32,6 +32,7 @@ returns an operator which performs an FFT on Arrays of type T
 # Arguments:
 * `T::Type`       - type of the array to transform
 * `shape::Tuple`  - size of the array to transform
+* `dims::Tuple`   - dimensions along which to perform the FFT
 * (`shift=true`)  - if true, fftshifts are performed
 * (`unitary=true`)  - if true, FFT is normalized such that it is unitary
 * (`S = Vector{T}`) - type of temporary vector, change to use on GPU
@@ -51,14 +52,14 @@ function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims
     facB = T(1.0)
   end
 
-  let shape_ = shape, plan_ = plan, iplan_ = iplan, tmpVec_ = tmpVec, facF_ = facF, facB_ = facB
+  let shape_ = shape, plan_ = plan, iplan_ = iplan, tmpVec_ = tmpVec, facF_ = facF, facB_ = facB, dim_ = dims
 
     fun! = fft_multiply!
     if shift
       fun! = fft_multiply_shift!
     end
 
-    return DirFFTOpImpl(prod(shape), prod(shape), false, false, (res, x) -> fun!(res, plan_, x, shape_, facF_, tmpVec_),
+    return DirFFTOpImpl(prod(shape), prod(shape), false, false, (res, x) -> fun!(res, plan_, x, shape_, dim_, facF_, tmpVec_),
         nothing, (res, x) -> fun!(res, iplan_, x, shape_, facB_, tmpVec_),
         0, 0, 0, true, false, true, similar(tmpVec, 0), similar(tmpVec, 0), plan, iplan, shift, unitary)
   end
@@ -69,10 +70,10 @@ function fft_multiply!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, :
   res .= factor .* vec(tmpVec)
 end
 
-function fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
-  ifftshift!(tmpVec, reshape(x,shape))
+function fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, dim::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
+  ifftshift!(tmpVec, reshape(x,shape), dim)
   plan * tmpVec
-  fftshift!(reshape(res,shape), tmpVec)
+  fftshift!(reshape(res,shape), tmpVec, dim)
   res .*= factor
 end
 
