@@ -60,7 +60,7 @@ function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims
     end
 
     return DirFFTOpImpl(prod(shape), prod(shape), false, false, (res, x) -> fun!(res, plan_, x, shape_, dim_, facF_, tmpVec_),
-        nothing, (res, x) -> fun!(res, iplan_, x, shape_, facB_, tmpVec_),
+        nothing, (res, x) -> fun!(res, iplan_, x, shape_, dim_ , facB_, tmpVec_),
         0, 0, 0, true, false, true, similar(tmpVec, 0), similar(tmpVec, 0), plan, iplan, shift, unitary)
   end
 end
