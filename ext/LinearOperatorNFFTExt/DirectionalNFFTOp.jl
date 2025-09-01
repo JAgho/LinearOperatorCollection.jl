@@ -65,4 +65,11 @@ function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
               , plan, S.toeplitz)
 end
 
+function produ!(y::AbstractArray, plan::AbstractNFFTPlan, x::AbstractVector) 
+    mul!(y, plan, reshape(x,plan.N))
+  end
+  
+  function ctprodu!(x::AbstractVector, plan::AbstractNFFTPlan, y::AbstractArray)
+    mul!(reshape(x, plan.N), adjoint(plan), y)
+  end
 
