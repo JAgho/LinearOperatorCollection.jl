@@ -70,7 +70,7 @@ function dir_fft_multiply!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr
   res .= factor .* vec(tmpVec)
 end
 
-function dir_fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, dim::NTuple{D}, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
+function dir_fft_multiply_shift!(res::AbstractVector{T}, plan::P, x::AbstractVector{Tr}, shape::NTuple{D}, dim, factor::T, tmpVec::AbstractArray{T,D}) where {T, Tr, P<:AbstractFFTs.Plan, D}
   ifftshift!(tmpVec, reshape(x,shape), dim)
   plan * tmpVec
   fftshift!(reshape(res,shape), tmpVec, dim)
