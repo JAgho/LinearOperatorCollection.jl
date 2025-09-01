@@ -1,4 +1,4 @@
-export FFTOpImpl
+export DirFFTOpImpl
 
 mutable struct FFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFFTs.Plan{T}} <: FFTOp{T}
   nrow :: Int

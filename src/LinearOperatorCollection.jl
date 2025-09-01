@@ -29,15 +29,17 @@ function wrapProd(prod::Function)
 end
 
 export linearOperatorList, createLinearOperator
-export AbstractLinearOperatorFromCollection, WaveletOp, FFTOp, DCTOp, DSTOp, NFFTOp,
+export AbstractLinearOperatorFromCollection, WaveletOp, FFTOp, DCTOp, DSTOp, NFFTOp, DirNFFTOp, DirFFTOp,
        SamplingOp, NormalOp, WeightingOp, GradientOp, RadonOp
 
 abstract type AbstractLinearOperatorFromCollection{T} <: AbstractLinearOperator{T} end
 abstract type WaveletOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type FFTOp{T} <: AbstractLinearOperatorFromCollection{T} end
+abstract type DirFFTOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type DCTOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type DSTOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type NFFTOp{T} <: AbstractLinearOperatorFromCollection{T} end
+abstract type DirNFFTOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type SamplingOp{T} <: AbstractLinearOperatorFromCollection{T} end
 abstract type NormalOp{T,S} <: AbstractLinearOperatorFromCollection{T} end
 abstract type GradientOp{T} <: AbstractLinearOperatorFromCollection{T} end
