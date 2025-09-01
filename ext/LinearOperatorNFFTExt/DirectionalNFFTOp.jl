@@ -53,13 +53,6 @@ function DirNFFTOpImpl(shape::Tuple, tr::AbstractMatrix{T}, dims::Union{UnitRang
             , plan, toeplitz)
 end
 
-function produ!(y::AbstractVector, plan::AbstractNFFTPlan, x::AbstractVector) 
-  mul!(y, plan, reshape(x,plan.N))
-end
-
-function ctprodu!(x::AbstractVector, plan::AbstractNFFTPlan, y::AbstractVector)
-  mul!(reshape(x, plan.N), adjoint(plan), y)
-end
 
 
 function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
