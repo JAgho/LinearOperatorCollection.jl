@@ -35,7 +35,7 @@ mutable struct DirNFFTOpImpl{T, vecT, P <: AbstractNFFTPlan} <: NFFTOp{T}
   Mtu5 :: vecT
   plan :: P
   toeplitz :: Bool
-  kshape::Tuple
+  klen::Tuple
 end
 
 LinearOperators.storage_type(op::DirNFFTOpImpl) = typeof(op.Mv5)
@@ -74,7 +74,7 @@ end
 function build_produ(kshape)
 
     function produ!(y::AbstractArray, plan::AbstractNFFTPlan, x::AbstractVector) 
-        vec(mul!(reshape(y, kshape), plan, reshape(x,kshape)))
+        vec(mul!(reshape(y, kshape), plan, reshape(x,plan.N)))
       end
     return produ!
 end
