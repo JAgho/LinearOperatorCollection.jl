@@ -35,6 +35,7 @@ mutable struct DirNFFTOpImpl{T, vecT, P <: AbstractNFFTPlan} <: NFFTOp{T}
   Mtu5 :: vecT
   plan :: P
   toeplitz :: Bool
+  kshape::Tuple
 end
 
 LinearOperators.storage_type(op::DirNFFTOpImpl) = typeof(op.Mv5)
@@ -48,12 +49,12 @@ function DirNFFTOpImpl(shape::Tuple, tr::AbstractMatrix{T}, dims::Union{UnitRang
   k_produ! = build_produ(kshape)
   k_ctprodu! = build_ctprodu(kshape)
 
-  return DirNFFTOpImpl{eltype(S), S, typeof(plan)}(size(tr,2), prod(shape), false, false
+  return DirNFFTOpImpl{eltype(S), S, typeof(plan)}(prod(kshape), prod(shape), false, false
             , (res,x) -> k_produ!(res,plan,x)
             , nothing
             , (res,y) -> k_ctprodu!(res,plan,y)
             , 0, 0, 0, false, false, false, S(undef, 0), S(undef, 0)
-            , plan, toeplitz)
+            , plan, toeplitz, kshape)
 end
 
 
@@ -62,12 +63,12 @@ function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
   plan = copy(S.plan)
   k_produ! = S.prod!
   k_ctprodu! = S.ctprod!
-  return DirNFFTOpImpl{T, vecT, P}(size(plan.k,2), prod(plan.N), false, false
+  return DirNFFTOpImpl{T, vecT, P}(prod(S.kshape), prod(plan.N), false, false
               , (res,x) -> k_produ!(res,plan,x)
               , nothing
               , (res,y) -> k_ctprodu!(res,plan,y)
               , 0, 0, 0, false, false, false, vecT(undef, 0), vecT(undef, 0)
-              , plan, S.toeplitz)
+              , plan, S.toeplitz, S.kshape)
 end
 
 function build_produ(kshape)
