@@ -63,12 +63,12 @@ function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
   plan = copy(S.plan)
   k_produ! = S.prod!
   k_ctprodu! = S.ctprod!
-  return DirNFFTOpImpl{T, vecT, P}(prod(S.kshape), prod(plan.N), false, false
+  return DirNFFTOpImpl{T, vecT, P}(prod(S.klen), prod(plan.N), false, false
               , (res,x) -> k_produ!(res,plan,x)
               , nothing
               , (res,y) -> k_ctprodu!(res,plan,y)
               , 0, 0, 0, false, false, false, vecT(undef, 0), vecT(undef, 0)
-              , plan, S.toeplitz, S.kshape)
+              , plan, S.toeplitz, S.klen)
 end
 
 function build_produ(kshape)
