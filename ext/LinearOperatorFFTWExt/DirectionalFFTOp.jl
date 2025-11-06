@@ -1,6 +1,6 @@
 export FFTOpImpl
 
-mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFFTs.Plan{T}} <: DirFFTOp{T}
+mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFFTs.Plan{T}} <: DirFFTOp{T, D}
   nrow :: Int
   ncol :: Int
   symmetric :: Bool
@@ -20,7 +20,7 @@ mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFF
   iplan :: IP
   shift::Bool
   unitary::Bool
-  dims::Tuple{Int64,Vararg{Int64}}
+  dims::NTuple{D,Int64}
 end
 
 LinearOperators.storage_type(op::DirFFTOpImpl) = typeof(op.Mv5)
