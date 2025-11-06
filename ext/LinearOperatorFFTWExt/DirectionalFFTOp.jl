@@ -79,5 +79,5 @@ end
 
 
 function Base.copy(S::DirFFTOpImpl)
-  return DirFFTOp(eltype(S); shape=size(S.plan), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
+  return DirFFTOp(eltype(S); shape=size(S.plan), dims=ntuple(x->x, length(S.dims)), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
 end
