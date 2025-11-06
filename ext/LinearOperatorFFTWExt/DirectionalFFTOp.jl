@@ -20,7 +20,7 @@ mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFF
   iplan :: IP
   shift::Bool
   unitary::Bool
-  dims::NTuple{D,Int64}
+  dimlen::Int64
 end
 
 LinearOperators.storage_type(op::DirFFTOpImpl) = typeof(op.Mv5)
@@ -62,7 +62,7 @@ function LinearOperatorCollection.DirFFTOp(T::Type; shape::NTuple{D,Int64}, dims
 
     return DirFFTOpImpl(prod(shape), prod(shape), false, false, (res, x) -> fun!(res, plan_, x, shape_, dim_, facF_, tmpVec_),
         nothing, (res, x) -> fun!(res, iplan_, x, shape_, dim_ , facB_, tmpVec_),
-        0, 0, 0, true, false, true, similar(tmpVec, 0), similar(tmpVec, 0), plan, iplan, shift, unitary, dims)
+        0, 0, 0, true, false, true, similar(tmpVec, 0), similar(tmpVec, 0), plan, iplan, shift, unitary, length(dims))
   end
 end
 
@@ -80,5 +80,5 @@ end
 
 
 function Base.copy(S::DirFFTOpImpl)
-  return DirFFTOp(eltype(S); shape=size(S.plan), dims=ntuple(x->x, length(S.dims)), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
+  return DirFFTOp(eltype(S); shape=size(S.plan), dims=ntuple(x->x, S.dimlen), shift=S.shift, unitary=S.unitary, S = LinearOperators.storage_type(S)) # TODO loses kwargs...
 end
