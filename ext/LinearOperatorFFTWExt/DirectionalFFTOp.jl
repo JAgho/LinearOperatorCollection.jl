@@ -1,6 +1,6 @@
 export FFTOpImpl
 
-mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFFTs.Plan{T}} <: DirFFTOp{T, D}
+mutable struct DirFFTOpImpl{T, vecT, P <: AbstractFFTs.Plan{T}, IP <: AbstractFFTs.Plan{T}} <: DirFFTOp{T}
   nrow :: Int
   ncol :: Int
   symmetric :: Bool
