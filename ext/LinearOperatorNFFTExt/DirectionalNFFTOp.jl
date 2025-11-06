@@ -61,8 +61,8 @@ end
 
 function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
   plan = copy(S.plan)
-  k_produ! = build_produ(S.klen, plan)#S.prod!
-  k_ctprodu! = build_ctprodu(S.klen, plan)#S.ctprod!
+  k_produ! = build_produ(S.klen)#S.prod!
+  k_ctprodu! = build_ctprodu(S.klen)#S.ctprod!
   return DirNFFTOpImpl{T, vecT, P}(prod(S.klen), prod(plan.N), false, false
               , (res, x) -> k_produ!(res,plan,x)
               , nothing
