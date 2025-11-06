@@ -64,9 +64,9 @@ function Base.copy(S::DirNFFTOpImpl{T, vecT, P}) where {T, vecT, P}
   k_produ! = S.prod!
   k_ctprodu! = S.ctprod!
   return DirNFFTOpImpl{T, vecT, P}(prod(S.klen), prod(plan.N), false, false
-              , (res, _, x) -> k_produ!(res,plan,x)
+              , (res, x) -> k_produ!(res,plan,x)
               , nothing
-              , (res, _, y) -> k_ctprodu!(res,plan,y)
+              , (res, y) -> k_ctprodu!(res,plan,y)
               , 0, 0, 0, false, false, false, vecT(undef, 0), vecT(undef, 0)
               , plan, S.toeplitz, S.klen)
 end
@@ -76,7 +76,7 @@ function build_produ(kshape)
     function produ!(y::AbstractArray, plan::AbstractNFFTPlan, x::AbstractVector) 
         vec(mul!(reshape(y, kshape), plan, reshape(x,plan.N)))
       end
-    return produ!
+    return (res, plan, x) -> produ!(res, plan, x)
 end
 
 function build_ctprodu(kshape)
@@ -84,7 +84,7 @@ function build_ctprodu(kshape)
   function ctprodu!(x::AbstractVector, plan::AbstractNFFTPlan, y::AbstractArray) 
       vec(mul!(reshape(x, plan.N), adjoint(plan), reshape(y, kshape)))
     end
-  return ctprodu!
+  return (res, plan, y) -> ctprodu!(res, plan, y)
 end
 
 
