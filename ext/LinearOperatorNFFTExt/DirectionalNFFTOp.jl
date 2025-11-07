@@ -75,7 +75,8 @@ function build_produ(kshape)
 
     function produ!(y::AbstractArray, plan::AbstractNFFTPlan, x::AbstractVector) 
         a = vec(mul!(reshape(y, kshape), plan, reshape(x,plan.N)))
-        a .*= 1/(sqrt(prod(plan.N[plan.dims])))
+        a .*= 1/(sqrt(plan.J))
+        
       end
     return (res, plan, x) -> produ!(res, plan, x)
 end
@@ -84,7 +85,7 @@ function build_ctprodu(kshape)
 
   function ctprodu!(x::AbstractVector, plan::AbstractNFFTPlan, y::AbstractArray) 
       a = vec(mul!(reshape(x, plan.N), adjoint(plan), reshape(y, kshape)))
-      a .*= 1/(sqrt(plan.J))
+      a .*= 1/(sqrt(prod(plan.N[plan.dims])))
     end
   return (res, plan, y) -> ctprodu!(res, plan, y)
 end
